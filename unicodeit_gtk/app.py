@@ -14,6 +14,10 @@ gi.require_version('Adw', '1')
 from gi.repository import GObject, GLib, Adw, Gtk, Gdk, Pango  # noqa: E402
 
 
+GUI_WIDTH = 500
+GUI_SPACING = 20
+
+
 class UnicodeItExitCodeError(Exception):
     code: int
 
@@ -67,6 +71,7 @@ class UnicodeItOutput(Gtk.Label):
 
 
 class UnicodeItContent(Gtk.Box):
+    inner_box: Gtk.Box
     submit_button: Gtk.Button
     input_widget: UnicodeItInput
     output_widget: UnicodeItOutput
@@ -75,20 +80,26 @@ class UnicodeItContent(Gtk.Box):
         super().__init__()
 
         self.set_orientation(Gtk.Orientation.VERTICAL)
-        self.set_spacing(10)
-        self.set_size_request(400, 100)
-        self.set_margin_top(20)
-        self.set_margin_bottom(20)
-        self.set_margin_start(20)
-        self.set_margin_end(20)
+        self.set_spacing(GUI_SPACING)
+        self.set_size_request(GUI_WIDTH, -1)
+        self.set_margin_top(GUI_SPACING)
+        self.set_margin_bottom(GUI_SPACING)
+        self.set_margin_start(GUI_SPACING)
+        self.set_margin_end(GUI_SPACING)
+
+        self.inner_box = Gtk.Box()
+        self.inner_box.set_spacing(GUI_SPACING)
+        self.inner_box.set_orientation(Gtk.Orientation.HORIZONTAL)
+        self.inner_box.set_homogeneous(True)
+        self.append(self.inner_box)
 
         self.input_widget = UnicodeItInput()
         self.input_widget.connect('changed', self.on_input)
         self.input_widget.connect('activate', self.on_enter)
-        self.append(self.input_widget)
+        self.inner_box.append(self.input_widget)
 
         self.output_widget = UnicodeItOutput()
-        self.append(self.output_widget)
+        self.inner_box.append(self.output_widget)
 
         self.submit_button = Gtk.Button.new_with_label('Submit')
         self.submit_button.connect('clicked', self.on_enter)

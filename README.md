@@ -2,7 +2,7 @@
 
 This is a GTK IME popup for entering symbols via (La)TeX - a simple wrapper around the [unicodeit Python library](https://github.com/svenkreiss/unicodeit).
 
-![Screenshot](./screenshot.png)
+![Screenshots](./screenshots.png)
 
 ## Usage
 

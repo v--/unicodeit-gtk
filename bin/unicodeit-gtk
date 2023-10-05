@@ -1,0 +1,15 @@
+#!/usr/bin/env python3
+
+import subprocess
+import sys
+
+from unicodeit_gtk import run_unicodeit_app, UnicodeItExitCodeError
+
+
+if __name__ ==  '__main__':
+    try:
+        output_value = run_unicodeit_app(sys.argv)
+        proc = subprocess.run(['wtype', output_value])
+        sys.exit(proc.returncode)
+    except UnicodeItExitCodeError as err:
+        sys.exit(err.code)

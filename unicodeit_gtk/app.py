@@ -116,8 +116,6 @@ class UnicodeItApp(Adw.Application):
     window: Adw.ApplicationWindow | None
     toolbar: Adw.ToolbarView  # type: ignore
     header: Adw.HeaderBar
-    outer_container: Gtk.CenterBox
-    inner_container: Gtk.CenterBox
     key_control: Gtk.EventControllerKey
     content: UnicodeItContent
 
@@ -129,8 +127,6 @@ class UnicodeItApp(Adw.Application):
 
         self.hide_window = hide_window
         self.toolbar = Adw.ToolbarView()  # type: ignore
-        self.outer_container = Gtk.CenterBox()
-        self.inner_container = Gtk.CenterBox()
         self.content = UnicodeItContent()
         self.key_control = Gtk.EventControllerKey()
 
@@ -146,16 +142,10 @@ class UnicodeItApp(Adw.Application):
 
         self.header = Adw.HeaderBar()
         self.toolbar.add_top_bar(self.header)
-
-        self.outer_container.set_orientation(Gtk.Orientation.VERTICAL)
-        self.toolbar.set_content(self.outer_container)
-
-        self.outer_container.set_center_widget(self.inner_container)
-        self.inner_container.set_center_widget(self.content)
+        self.toolbar.set_content(self.content)
 
         self.key_control.connect('key-pressed', self.on_key_press)
         self.window.add_controller(self.key_control)
-
         self.window.present()
 
         # Showing the window and then hiding it prevents a delay on the first trigger

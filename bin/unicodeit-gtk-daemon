@@ -13,16 +13,16 @@ def wtype(value: str):
 
 
 def on_submit(widget: UnicodeItContent, value: str, app: UnicodeItApp):
+    if app.window:
+        app.window.set_visible(False)
+
     thread = Thread(target=wtype, args=[value])
     thread.start()
-
-    if app.window:
-        app.window.close()
 
 
 if __name__ ==  '__main__':
     try:
-        app = UnicodeItApp(hide_window=False)
+        app = UnicodeItApp(hide_window=True)
         app.content.connect('submit', on_submit, app)
         app.run(sys.argv)
     except UnicodeItExitCodeError as err:

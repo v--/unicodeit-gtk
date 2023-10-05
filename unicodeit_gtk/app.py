@@ -1,8 +1,11 @@
 from __future__ import annotations
+from types import FrameType
+import signal
 import warnings
 
 import unicodeit
 from unicodeit.data import REPLACEMENTS
+from setproctitle import setproctitle
 
 import gi
 gi.require_version('Gtk', '4.0')
@@ -48,11 +51,11 @@ class UnicodeItInput(Gtk.Entry):
             warnings.simplefilter(action='ignore', category=DeprecationWarning)
             self.set_completion(self.completion)
 
+    def reset_text(self):
+        return self.get_buffer().set_text('', 0)
+
     def get_text(self):
         return self.get_buffer().get_text()
-
-    def changed(self, widget: UnicodeItInput):
-        pass
 
 
 class UnicodeItOutput(Gtk.Label):
@@ -96,6 +99,7 @@ class UnicodeItContent(Gtk.Box):
 
     def on_enter(self, widget: Gtk.Widget):
         self.emit('submit', self.output_widget.get_text())
+        self.input_widget.reset_text()
 
 
 GObject.signal_new(
@@ -108,7 +112,8 @@ GObject.signal_new(
 
 
 class UnicodeItApp(Adw.Application):
-    window: Adw.ApplicationWindow
+    hide_window: bool
+    window: Adw.ApplicationWindow | None
     toolbar: Adw.ToolbarView  # type: ignore
     header: Adw.HeaderBar
     outer_container: Gtk.CenterBox
@@ -116,37 +121,46 @@ class UnicodeItApp(Adw.Application):
     key_control: Gtk.EventControllerKey
     content: UnicodeItContent
 
-    output_value: str
-
-    def __init__(self):
-        super().__init__(application_id='net.ivasilev.UnicodeItGUI')
+    def __init__(self, hide_window: bool):
+        super().__init__(application_id='net.ivasilev.UnicodeItGTK')
         GLib.set_application_name('Unicode it')
-        self.output_value = ''
+        setproctitle('unicodeit-gtk')
+        signal.signal(signal.SIGUSR1, self.show_window)
+
+        self.hide_window = hide_window
+        self.toolbar = Adw.ToolbarView()  # type: ignore
+        self.outer_container = Gtk.CenterBox()
+        self.inner_container = Gtk.CenterBox()
+        self.content = UnicodeItContent()
+        self.key_control = Gtk.EventControllerKey()
+
+    def run(self, args: list[str] | None):
+        exit_status = super().run(args)
+
+        if exit_status > 0:
+            raise UnicodeItExitCodeError(exit_status)
 
     def do_activate(self):
         self.window = Adw.ApplicationWindow(application=self, title='Unicode it')
-        self.toolbar = Adw.ToolbarView()
         self.window.set_content(self.toolbar)
 
         self.header = Adw.HeaderBar()
         self.toolbar.add_top_bar(self.header)
 
-        self.outer_container = Gtk.CenterBox()
         self.outer_container.set_orientation(Gtk.Orientation.VERTICAL)
         self.toolbar.set_content(self.outer_container)
 
-        self.inner_container = Gtk.CenterBox()
         self.outer_container.set_center_widget(self.inner_container)
-
-        self.content = UnicodeItContent()
-        self.content.connect('submit', self.on_submit)
         self.inner_container.set_center_widget(self.content)
 
-        self.key_control = Gtk.EventControllerKey()
         self.key_control.connect('key-pressed', self.on_key_press)
         self.window.add_controller(self.key_control)
 
         self.window.present()
+
+        # Showing the window and then hiding it prevents a delay on the first trigger
+        if self.hide_window:
+            self.window.set_visible(False)
 
     def on_key_press(
         self,
@@ -156,18 +170,8 @@ class UnicodeItApp(Adw.Application):
         state: Gdk.ModifierType
     ):
         if key_value == Gdk.KEY_Escape:
-            self.window.close()
+            self.content.emit('submit', '')
 
-    def on_submit(self, widget: UnicodeItContent, value: str):
-        self.output_value = value
-        self.window.close()
-
-
-def run_unicodeit_app(args: list[str]):
-    app = UnicodeItApp()
-    exit_status = app.run(args)
-
-    if exit_status > 0:
-        raise UnicodeItExitCodeError(exit_status)
-
-    return app.output_value
+    def show_window(self, sig_num: int, stack_frame: FrameType | None):
+        if self.window:
+            self.window.set_visible(True)

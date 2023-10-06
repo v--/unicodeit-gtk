@@ -6,6 +6,10 @@ This is a GTK IME popup for entering symbols via (La)TeX - a simple wrapper arou
 
 ![Screenshots](./screenshots.png)
 
+A benefit of using GTK is that emoji can be entered via Ctrl+. :
+
+![Emoji screenshot](./screenshot_emoji.png)
+
 ## Usage
 
 The popup window can be launched via the Python script [`bin/unicodeit-gtk`](./bin/unicodeit-gtk). It can be closed via the escape button. Pressing enter or clicking the button will try to input the corresponding Unicode characters via [wtype](https://github.com/atx/wtype).

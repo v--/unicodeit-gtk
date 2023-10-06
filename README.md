@@ -1,5 +1,7 @@
 # Unicode it GTK
 
+[![AUR Package](https://img.shields.io/aur/version/unicodeit-gtk)](https://aur.archlinux.org/packages/unicodeit-gtk)
+
 This is a GTK IME popup for entering symbols via (La)TeX - a simple wrapper around the [unicodeit Python library](https://github.com/svenkreiss/unicodeit).
 
 ![Screenshots](./screenshots.png)
@@ -14,6 +16,8 @@ Since starting a GTK application is not instantaneous, an alternative is provide
 
 ## Installation
 
+An [AUR package](https://aur.archlinux.org/packages/unicodeit-gtk) is available.
+
 The two hard prerequisites are a supported version of Python and GTK4. The `wtype` binary is also a prerequisite, although the launch script can be easily modified to use alternatives.
 
 The following steps are sufficient:
@@ -23,3 +27,5 @@ The following steps are sufficient:
 * Run `poetry install`.
 * Run `pip install [--user] dist/*.whl`
 * Make sure `bin/unicodeit-gtk` and `bin/unicodeit-gtk-daemon` can be found in PATH.
+
+If you are packaging this for some other package manager, consider using PEP-517 tools as shown in [this PKGBUILD file](https://aur.archlinux.org/cgit/aur.git/tree/PKGBUILD?h=unicodeit-gtk).

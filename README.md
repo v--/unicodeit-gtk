@@ -23,7 +23,7 @@ The popup window can be launched via the Python script [`bin/unicodeit-gtk`](./b
 
 Since starting a GTK application is not instantaneous, an alternative is provided by [`bin/unicodeit-gtk-server`](./bin/unicodeit-gtk-server). Once started, the server will listen to SIGUSR1 and then a window will pop up. This can be useful when the following command is bound to a keyboard shortcut:
 
-    killall -SIGUSR1 unicodeit-gtk-server
+    pkill -SIGUSR1 unicodeit-gtk
 
 ## Installation
 

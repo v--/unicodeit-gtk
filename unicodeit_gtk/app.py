@@ -4,6 +4,7 @@ import warnings
 
 import unicodeit
 from unicodeit.data import REPLACEMENTS
+from setproctitle import setproctitle
 
 import gi
 gi.require_version('Gtk', '4.0')
@@ -137,6 +138,7 @@ class UnicodeItApp(Adw.Application):
 
     def __init__(self):
         super().__init__(application_id='net.ivasilev.UnicodeItGTK')
+        setproctitle('unicodeit-gtk')
         self.window = None
 
         GLib.set_application_name('Unicode it')

@@ -1,31 +1,19 @@
 from __future__ import annotations
-from types import FrameType
 import signal
 import warnings
 
 import unicodeit
 from unicodeit.data import REPLACEMENTS
-from setproctitle import setproctitle
 
 import gi
 gi.require_version('Gtk', '4.0')
 gi.require_version('Adw', '1')
 
-from gi.repository import GObject, GLib, Adw, Gtk, Gdk, Pango  # noqa: E402
+from gi.repository import GObject, GLib, Adw, Gtk, Gio, Pango  # noqa: E402
 
 
 GUI_WIDTH = 500
-GUI_SPACING = 20
-
-
-class UnicodeItExitCodeError(Exception):
-    code: int
-
-    def __init__(self, code: int):
-        self.code = code
-
-    def __str__(self):
-        return f'The GUI exited with code {self.code}'
+GUI_SPACING = 15
 
 
 class UnicodeItCompletion(Gtk.EntryCompletion):
@@ -68,54 +56,76 @@ class UnicodeItOutput(Gtk.Label):
         self.set_ellipsize(Pango.EllipsizeMode.START)
         self.set_halign(Gtk.Align.START)
         self.set_margin_start(9)
+        self.set_text('')
+
+    def set_text(self, text: str):
+        if text:
+            super().set_text(text)
+        else:
+            self.set_markup(
+                '<span foreground="gray">(La)TeX code will be rendered here</span>'
+            )
 
 
-class UnicodeItContent(Gtk.Box):
-    inner_box: Gtk.Box
-    submit_button: Gtk.Button
+class UnicodeItWindow(Adw.ApplicationWindow):
+    toolbar: Adw.ToolbarView  # type: ignore
+    header: Adw.HeaderBar
     input_widget: UnicodeItInput
     output_widget: UnicodeItOutput
 
-    def __init__(self):
-        super().__init__()
-
-        self.set_orientation(Gtk.Orientation.VERTICAL)
-        self.set_spacing(GUI_SPACING)
+    def __init__(self, application: Gtk.Application):
+        super().__init__(application=application, title='Unicode it')
         self.set_size_request(GUI_WIDTH, -1)
-        self.set_margin_top(GUI_SPACING)
-        self.set_margin_bottom(GUI_SPACING)
-        self.set_margin_start(GUI_SPACING)
-        self.set_margin_end(GUI_SPACING)
 
-        self.inner_box = Gtk.Box()
-        self.inner_box.set_spacing(GUI_SPACING)
-        self.inner_box.set_orientation(Gtk.Orientation.HORIZONTAL)
-        self.inner_box.set_homogeneous(True)
-        self.append(self.inner_box)
+        self.toolbar = Adw.ToolbarView()  # type: ignore
+        self.set_content(self.toolbar)
+
+        self.header = Adw.HeaderBar()
+        self.toolbar.add_top_bar(self.header)
+
+        self.content = Gtk.Box(
+            orientation=Gtk.Orientation.VERTICAL,
+            spacing=GUI_SPACING,
+            margin_top=GUI_SPACING,
+            margin_bottom=GUI_SPACING,
+            margin_start=GUI_SPACING,
+            margin_end=GUI_SPACING
+        )
+
+        self.toolbar.set_content(self.content)
+
+        self.output_widget = UnicodeItOutput()
+        self.content.append(self.output_widget)
 
         self.input_widget = UnicodeItInput()
         self.input_widget.connect('changed', self.on_input)
         self.input_widget.connect('activate', self.on_enter)
-        self.inner_box.append(self.input_widget)
+        self.content.append(self.input_widget)
 
-        self.output_widget = UnicodeItOutput()
-        self.inner_box.append(self.output_widget)
+        self.activate()
 
-        self.submit_button = Gtk.Button.new_with_label('Submit')
-        self.submit_button.connect('clicked', self.on_enter)
-        self.append(self.submit_button)
+    def get_rendered_text(self):
+        return unicodeit.replace(self.input_widget.get_text())
 
     def on_input(self, widget: UnicodeItInput):
-        self.output_widget.set_text(unicodeit.replace(widget.get_text()))
+        self.output_widget.set_text(self.get_rendered_text())
 
     def on_enter(self, widget: Gtk.Widget):
-        self.emit('submit', self.output_widget.get_text())
+        text = self.get_rendered_text()
+        self.minimize()
+        self.emit('submit', text)
+
+    def minimize(self):
+        self.set_visible(False)
         self.input_widget.reset_text()
+
+    def activate(self):
+        self.present()
 
 
 GObject.signal_new(
     'submit',
-    UnicodeItContent,
+    UnicodeItWindow,
     0,
     GObject.TYPE_NONE,
     [GObject.TYPE_STRING]
@@ -123,56 +133,54 @@ GObject.signal_new(
 
 
 class UnicodeItApp(Adw.Application):
-    hide_window: bool
-    window: Adw.ApplicationWindow | None
-    toolbar: Adw.ToolbarView  # type: ignore
-    header: Adw.HeaderBar
-    key_control: Gtk.EventControllerKey
-    content: UnicodeItContent
+    window: UnicodeItWindow | None
 
-    def __init__(self, hide_window: bool):
+    def __init__(self):
         super().__init__(application_id='net.ivasilev.UnicodeItGTK')
-        GLib.set_application_name('Unicode it')
-        setproctitle('unicodeit-gtk')
-        signal.signal(signal.SIGUSR1, self.show_window)
+        self.window = None
 
-        self.hide_window = hide_window
-        self.toolbar = Adw.ToolbarView()  # type: ignore
-        self.content = UnicodeItContent()
-        self.key_control = Gtk.EventControllerKey()
+        GLib.set_application_name('Unicode it')
+        GLib.unix_signal_add(
+            GLib.PRIORITY_DEFAULT,
+            signal.SIGUSR1,
+            self.activate_window
+        )
+
+        self.set_accels_for_action('app.minimize', ['Escape'])
+        self.connect('activate', self.on_activate)
 
     def run(self, args: list[str] | None):
         exit_status = super().run(args)
 
         if exit_status > 0:
-            raise UnicodeItExitCodeError(exit_status)
+            raise SystemExit(exit_status)
 
-    def do_activate(self):
-        self.window = Adw.ApplicationWindow(application=self, title='Unicode it')
-        self.window.set_content(self.toolbar)
+    def on_activate(self, app: UnicodeItApp):
+        self.window = UnicodeItWindow(application=self)
+        self.window.connect('submit', self.on_submit)
 
-        self.header = Adw.HeaderBar()
-        self.toolbar.add_top_bar(self.header)
-        self.toolbar.set_content(self.content)
+        minimize_action = Gio.SimpleAction(name='minimize')
+        minimize_action.connect('activate', self.on_minimize)
+        self.add_action(minimize_action)
 
-        self.key_control.connect('key-pressed', self.on_key_press)
-        self.window.add_controller(self.key_control)
-        self.window.present()
+    def on_submit(self, window: UnicodeItWindow, value: str):
+        self.emit('submit', value)
 
-        # Showing the window and then hiding it prevents a delay on the first trigger
-        if self.hide_window:
-            self.window.set_visible(False)
-
-    def on_key_press(
-        self,
-        key: Gtk.EventControllerKey,
-        key_value: int,
-        key_code: int,
-        state: Gdk.ModifierType
-    ):
-        if key_value == Gdk.KEY_Escape:
-            self.content.emit('submit', '')
-
-    def show_window(self, sig_num: int, stack_frame: FrameType | None):
+    def on_minimize(self, action: Gio.Action, parameter: None):
         if self.window:
-            self.window.set_visible(True)
+            self.window.minimize()
+
+    def activate_window(self):
+        if self.window:
+            self.window.activate()
+
+        return GLib.SOURCE_CONTINUE
+
+
+GObject.signal_new(
+    'submit',
+    UnicodeItApp,
+    0,
+    GObject.TYPE_NONE,
+    [GObject.TYPE_STRING]
+)

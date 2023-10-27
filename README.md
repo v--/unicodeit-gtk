@@ -33,7 +33,7 @@ The two hard prerequisites are a supported version of Python and GTK4. The `wtyp
 
 The following steps are sufficient:
 
-* Make use [`poetry`](https://python-poetry.org/) is installed.
+* Make sure [`poetry`](https://python-poetry.org/) is installed.
 * Clone the repository.
 * Run `poetry install`.
 * Run `pip install [--user] dist/*.whl`

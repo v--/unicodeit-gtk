@@ -4,17 +4,12 @@ import warnings
 
 import unicodeit
 from unicodeit.data import REPLACEMENTS
-from setproctitle import setproctitle
 
 import gi
 gi.require_version('Gtk', '4.0')
 gi.require_version('Adw', '1')
 
 from gi.repository import GObject, GLib, Adw, Gtk, Gio, Pango  # noqa: E402
-
-
-GUI_WIDTH = 500
-GUI_SPACING = 15
 
 
 class UnicodeItCompletion(Gtk.EntryCompletion):
@@ -38,6 +33,7 @@ class UnicodeItInput(Gtk.Entry):
 
     def __init__(self):
         super().__init__()
+        self.add_css_class('content-input')
         self.completion = UnicodeItCompletion()
 
         with warnings.catch_warnings():
@@ -62,10 +58,10 @@ class UnicodeItOutput(Gtk.Label):
     def set_text(self, text: str):
         if text:
             super().set_text(text)
+            self.remove_css_class('placeholder')
         else:
-            self.set_markup(
-                '<span foreground="gray">(La)TeX code will be rendered here</span>'
-            )
+            super().set_text('(La)TeX code will be rendered here')
+            self.add_css_class('placeholder')
 
 
 class UnicodeItWindow(Adw.ApplicationWindow):
@@ -76,7 +72,6 @@ class UnicodeItWindow(Adw.ApplicationWindow):
 
     def __init__(self, application: Gtk.Application):
         super().__init__(application=application, title='Unicode it')
-        self.set_size_request(GUI_WIDTH, -1)
 
         self.toolbar = Adw.ToolbarView()  # type: ignore
         self.set_content(self.toolbar)
@@ -84,24 +79,17 @@ class UnicodeItWindow(Adw.ApplicationWindow):
         self.header = Adw.HeaderBar()
         self.toolbar.add_top_bar(self.header)
 
-        self.content = Gtk.Box(
-            orientation=Gtk.Orientation.VERTICAL,
-            spacing=GUI_SPACING,
-            margin_top=GUI_SPACING,
-            margin_bottom=GUI_SPACING,
-            margin_start=GUI_SPACING,
-            margin_end=GUI_SPACING
-        )
-
+        self.content = Gtk.Grid()
+        self.content.add_css_class('content')
         self.toolbar.set_content(self.content)
 
         self.output_widget = UnicodeItOutput()
-        self.content.append(self.output_widget)
+        self.content.attach(self.output_widget, column=0, row=0, width=1, height=1)
 
         self.input_widget = UnicodeItInput()
         self.input_widget.connect('changed', self.on_input)
         self.input_widget.connect('activate', self.on_enter)
-        self.content.append(self.input_widget)
+        self.content.attach(self.input_widget, column=0, row=1, width=1, height=1)
 
         self.activate()
 
@@ -138,7 +126,6 @@ class UnicodeItApp(Adw.Application):
 
     def __init__(self):
         super().__init__(application_id='net.ivasilev.UnicodeItGTK')
-        setproctitle('unicodeit-gtk')
         self.window = None
 
         GLib.set_application_name('Unicode it')

@@ -3,7 +3,9 @@
 import subprocess
 import sys
 
-from unicodeit_gtk import UnicodeItApp
+from setproctitle import setproctitle
+
+from unicodeit_gtk import UnicodeItApp, apply_styling
 
 
 def on_activate(app: UnicodeItApp):
@@ -17,6 +19,9 @@ def on_submit(app: UnicodeItApp, value: str):
 
 
 if __name__ ==  '__main__':
+    setproctitle('unicodeit-gtk')
+    apply_styling()
+
     app = UnicodeItApp()
     app.connect('submit', on_submit)
     app.connect('activate', on_activate)

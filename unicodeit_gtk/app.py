@@ -1,4 +1,3 @@
-from __future__ import annotations
 import signal
 import warnings
 
@@ -49,10 +48,13 @@ class UnicodeItInput(Gtk.Entry):
 
 class UnicodeItOutput(Gtk.Label):
     def __init__(self):
-        super().__init__()
-        self.set_ellipsize(Pango.EllipsizeMode.START)
-        self.set_halign(Gtk.Align.START)
-        self.set_margin_start(9)
+        super().__init__(
+            halign=Gtk.Align.START,
+            ellipsize=Pango.EllipsizeMode.START,
+            margin_start=9,
+            single_line_mode=True
+        )
+
         self.set_text('')
 
     def set_text(self, text: str):
@@ -144,7 +146,7 @@ class UnicodeItApp(Adw.Application):
         if exit_status > 0:
             raise SystemExit(exit_status)
 
-    def on_activate(self, app: UnicodeItApp):
+    def on_activate(self, app: 'UnicodeItApp'):
         self.window = UnicodeItWindow(application=self)
         self.window.connect('submit', self.on_submit)
 

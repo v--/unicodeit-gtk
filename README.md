@@ -35,8 +35,15 @@ The following steps are sufficient:
 
 * Make sure [`poetry`](https://python-poetry.org/) is installed.
 * Clone the repository.
-* Run `poetry install`.
-* Run `pip install [--user] dist/*.whl`
-* Make sure `bin/unicodeit-gtk` and `bin/unicodeit-gtk-server` can be found in PATH.
+* Build and install via [`pipx`](https://pipx.pypa.io/):
+    ```
+    poetry install
+    poetry build
+    pipx install --include-deps dist/*.whl
+    ```
+
+    This will install the `unicodeit_gtk` Python module, as well as `unicodeit-gtk` and `unicodeit-gtk-server` executables.
+
+* Alternatively, use the `bin/unicodeit-gtk` and/or `bin/unicodeit-gtk-server` executables.
 
 If you are packaging this for some other package manager, consider using PEP-517 tools as shown in [this PKGBUILD file](https://aur.archlinux.org/cgit/aur.git/tree/PKGBUILD?h=unicodeit-gtk).

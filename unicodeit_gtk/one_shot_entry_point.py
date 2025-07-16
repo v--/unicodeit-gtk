@@ -3,7 +3,8 @@ import sys
 
 from setproctitle import setproctitle
 
-from unicodeit_gtk import UnicodeItApp, apply_styling
+from .app import UnicodeItApp
+from .styling import apply_styling
 
 
 def on_submit(app: UnicodeItApp, value: str):

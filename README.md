@@ -21,7 +21,7 @@ The easiest way to use this project is via [`uv`](https://docs.astral.sh/uv/). T
 uvx --from git+https://github.com/v--/unicodeit-gtk unicodeit-gtk
 ```
 
-* `Escape` exists or, if the server has been started, clears any input and hides the popup.
+* `Escape` exits or, if the server has been started, clears any input and hides the popup.
 * `Enter` inputs the corresponding Unicode characters via [wtype](https://github.com/atx/wtype)
 
 Since starting a GTK application is not instantaneous, an alternative is provided by another command --- `unicodeit-gtk-server`. Once started, the server will listen to SIGUSR1 and then a window will pop up. This can be useful when the following command is bound to a keyboard shortcut:
@@ -30,7 +30,7 @@ Since starting a GTK application is not instantaneous, an alternative is provide
 
 ## Installation
 
-An [AUR package](https://aur.archlinux.org/packages/unicodeit-gtk) is available.
+While `uvx` provides an implicit way to run this program, a proper installation is often more desirable. An [AUR package](https://aur.archlinux.org/packages/unicodeit-gtk) is available for reference.
 
 The two hard prerequisites are a supported version of Python and GTK4. The `wtype` binary is also a prerequisite, although the launch script can be easily modified to use alternatives.
 

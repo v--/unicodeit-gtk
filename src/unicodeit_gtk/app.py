@@ -125,9 +125,11 @@ GObject.signal_new(
 
 class UnicodeItApp(Adw.Application):
     window: UnicodeItWindow | None
+    one_shot: bool
 
-    def __init__(self):
+    def __init__(self, one_shot: bool = False):
         super().__init__(application_id='net.ivasilev.UnicodeItGTK')
+        self.one_shot = one_shot
         self.window = None
 
         GLib.set_application_name('Unicode it')
@@ -157,8 +159,14 @@ class UnicodeItApp(Adw.Application):
     def on_submit(self, window: UnicodeItWindow, value: str):
         self.emit('submit', value)
 
+        if self.one_shot and self.window:
+            self.window.close()
+
     def on_minimize(self, action: Gio.Action, parameter: None):
-        if self.window:
+        if self.one_shot:
+            if self.window:
+                self.window.close()
+        elif self.window:
             self.window.minimize()
 
     def activate_window(self):

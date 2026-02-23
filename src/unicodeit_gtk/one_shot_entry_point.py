@@ -11,14 +11,11 @@ def on_submit(app: UnicodeItApp, value: str):
     if value:
         subprocess.Popen(['wtype', value])
 
-    if app.window:
-        app.window.close()
-
 
 def one_shot_entry_point():
     setproctitle('unicodeit-gtk')
     apply_styling()
 
-    app = UnicodeItApp()
+    app = UnicodeItApp(one_shot=True)
     app.connect('submit', on_submit)
     app.run(sys.argv)

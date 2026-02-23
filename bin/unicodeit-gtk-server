@@ -1,5 +1,0 @@
-#!/usr/bin/env python3
-
-from unicodeit_gtk import server_entry_point
-
-server_entry_point()

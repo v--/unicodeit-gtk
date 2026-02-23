@@ -1,5 +1,0 @@
-#!/usr/bin/env python3
-
-from unicodeit_gtk import one_shot_entry_point
-
-one_shot_entry_point()

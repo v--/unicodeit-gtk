@@ -16,12 +16,15 @@ A benefit of using GTK is that emoji can be entered via "Ctrl+.":
 
 ## Usage
 
-The popup window can be launched via the Python script [`bin/unicodeit-gtk`](./bin/unicodeit-gtk).
+The easiest way to use this project is via [`uv`](https://docs.astral.sh/uv/). The popup window can be launched via the command
+```
+uvx --from git+https://github.com/v--/unicodeit-gtk unicodeit-gtk
+```
 
 * `Escape` exists or, if the server has been started, clears any input and hides the popup.
 * `Enter` inputs the corresponding Unicode characters via [wtype](https://github.com/atx/wtype)
 
-Since starting a GTK application is not instantaneous, an alternative is provided by [`bin/unicodeit-gtk-server`](./bin/unicodeit-gtk-server). Once started, the server will listen to SIGUSR1 and then a window will pop up. This can be useful when the following command is bound to a keyboard shortcut:
+Since starting a GTK application is not instantaneous, an alternative is provided by another command --- `unicodeit-gtk-server`. Once started, the server will listen to SIGUSR1 and then a window will pop up. This can be useful when the following command is bound to a keyboard shortcut:
 
     pkill -SIGUSR1 unicodeit-gtk
 
@@ -33,17 +36,17 @@ The two hard prerequisites are a supported version of Python and GTK4. The `wtyp
 
 The following steps are sufficient:
 
-* Make sure [`poetry`](https://python-poetry.org/) is installed.
+* Make sure [`uv`](https://docs.astral.sh/uv/) is installed.
 * Clone the repository.
 * Build and install via [`pipx`](https://pipx.pypa.io/):
     ```
-    poetry install
-    poetry build
+    uv sync
+    uv build
     pipx install --include-deps dist/*.whl
     ```
 
     This will install the `unicodeit_gtk` Python module, as well as `unicodeit-gtk` and `unicodeit-gtk-server` executables.
 
-* Alternatively, use the `bin/unicodeit-gtk` and/or `bin/unicodeit-gtk-server` executables.
+* Alternatively, use `uv run unicodeit-gtk` and/or `uv run unicodeit-gtk-server`.
 
 If you are packaging this for some other package manager, consider using PEP-517 tools as shown in [this PKGBUILD file](https://aur.archlinux.org/cgit/aur.git/tree/PKGBUILD?h=unicodeit-gtk).

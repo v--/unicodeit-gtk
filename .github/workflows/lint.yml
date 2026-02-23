@@ -1,0 +1,20 @@
+name: Lint
+
+on: [push]
+
+jobs:
+  build:
+    runs-on:  ubuntu-24.04
+
+    steps:
+    - uses: actions/checkout@v2
+    - uses: actions/setup-python@v4
+    - uses: astral-sh/setup-uv@v7
+
+    - name: Install dependencies
+      run: uv sync
+
+    - name: Lint
+      run: |
+        uv run ruff check
+        uv run mypy

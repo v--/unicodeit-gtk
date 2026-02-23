@@ -6,11 +6,11 @@ license = "Unlicense"
 readme = "README.md"
 requires-python = ">=3.10,<4.0"
 authors = [
-  { "name" = "Ianis Vasilev", "email" = "ianis@ivasilev.net" }
+  { name = "Ianis Vasilev", email = "ianis@ivasilev.net" }
 ]
 
 dependencies = [
-  "PyGObject (>=3.54.5)",
+  "pygobject (>=3.54.5)",
   "unicodeit (>=0.7.5)",
   "setproctitle (>=1.3.6)",
 ]
@@ -24,7 +24,7 @@ unicodeit-gtk-server = "unicodeit_gtk:server_entry_point"
 
 [dependency-groups]
 dev = [
-  "PyGObject-stubs (>=2.13.0)",
+  "pygobject-stubs (>=2.13.0)",
   "mypy (>=1.18.2)",
   "ruff (>=0.14.2)",
 ]
@@ -33,18 +33,8 @@ dev = [
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
 
-[tool.poe.tasks.lint]
-sequence = [
-  { cmd = "ruff check $path" },
-  { cmd = "mypy $path" }
-]
-args = [
-  { name = "path", positional = true, default = "" }
-]
-
 [tool.ruff]
 line-length = 120
-extend-include = ["bin/unicodeit-gtk", "bin/unicodeit-gtk-server"]
 
 [tool.ruff.lint]
 extend-select = ["UP"]

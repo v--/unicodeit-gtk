@@ -49,4 +49,5 @@ The following steps are sufficient:
 
 * Alternatively, use `uv run unicodeit-gtk` and/or `uv run unicodeit-gtk-server`.
 
-If you are packaging this for some other package manager, consider using PEP-517 tools as shown in [this PKGBUILD file](https://aur.archlinux.org/cgit/aur.git/tree/PKGBUILD?h=unicodeit-gtk).
+> [!TIP]
+> If you are packaging this for some other package manager, consider using PEP-517 tools as shown in [this PKGBUILD file](https://aur.archlinux.org/cgit/aur.git/tree/PKGBUILD?h=unicodeit-gtk).

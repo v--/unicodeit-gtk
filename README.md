@@ -41,7 +41,7 @@ The following steps are sufficient:
 * Build and install via [`pipx`](https://pipx.pypa.io/):
     ```
     uv sync
-    uv build
+    uv build --wheel
     pipx install --include-deps dist/*.whl
     ```
 

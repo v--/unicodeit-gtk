@@ -17,6 +17,7 @@ dependencies = [
 
 [project.urls]
 Repository = "https://github.com/v--/unicodeit-gtk.git"
+Changelog = "https://github.com/v--/unicodeit-gtk/blob/master/CHANGELOG.md"
 
 [project.scripts]
 unicodeit-gtk = "unicodeit_gtk:one_shot_entry_point"

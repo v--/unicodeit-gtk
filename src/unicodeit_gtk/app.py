@@ -73,7 +73,11 @@ class UnicodeItWindow(Adw.ApplicationWindow):
     output_widget: UnicodeItOutput
 
     def __init__(self, application: Gtk.Application):
-        super().__init__(application=application, title='Unicode it')
+        super().__init__(
+            application=application,
+            title='Unicode it',
+            height_request=-1  # Force minimal height
+        )
 
         self.toolbar = Adw.ToolbarView()  # type: ignore
         self.set_content(self.toolbar)

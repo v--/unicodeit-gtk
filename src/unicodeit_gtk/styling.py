@@ -3,12 +3,12 @@ from gi.repository import Gdk, Gtk
 
 CSS = """
 label.placeholder {
-    opacity: 0.5;
+  opacity: 0.5;
 }
 
 grid.content {
-  margin: 10px;
-  border-spacing: 10px;
+  margin: 1em;
+  border-spacing: 1em;
 }
 
 entry.content-input {

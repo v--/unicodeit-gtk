@@ -16,12 +16,9 @@ A benefit of using GTK is that emoji can be entered via "Ctrl+.":
 
 ## Usage
 
-The easiest way to use this project is via [`uv`](https://docs.astral.sh/uv/). The popup window can be launched via the command
-```
-uvx --from git+https://github.com/v--/unicodeit-gtk unicodeit-gtk
-```
+The project provides a `unicodeit-gtk` executable, which launches the popup window seen on the screenshots above.
 
-* `Escape` exits or, if the server has been started, clears any input and hides the popup.
+* `Escape` hides the window.
 * `Enter` inputs the corresponding Unicode characters via [wtype](https://github.com/atx/wtype)
 
 Since starting a GTK application is not instantaneous, an alternative is provided by another command --- `unicodeit-gtk-server`. Once started, the server will listen to SIGUSR1 and then a window will pop up. This can be useful when the following command is bound to a keyboard shortcut:
@@ -30,24 +27,17 @@ Since starting a GTK application is not instantaneous, an alternative is provide
 
 ## Installation
 
-While `uvx` provides an implicit way to run this program, a proper installation is often more desirable. An [AUR package](https://aur.archlinux.org/packages/unicodeit-gtk) is available for reference.
+An easy way to install both executables for the current user is via [`uv`](https://docs.astral.sh/uv/):
 
-The two hard prerequisites are a supported version of Python and GTK4. The `wtype` binary is also a prerequisite, although the launch script can be easily modified to use alternatives.
+    uv tool install unicodeit-gtk --from git+https://github.com/v--/unicodeit-gtk
 
-The following steps are sufficient:
+Other tools like [`pipx`](https://pipx.pypa.io/) can also be used - simply run the following from the cloned repository:
 
-* Make sure [`uv`](https://docs.astral.sh/uv/) is installed.
-* Clone the repository.
-* Build and install via [`pipx`](https://pipx.pypa.io/):
-    ```
     uv sync
     uv build --wheel
     pipx install --include-deps dist/*.whl
-    ```
 
-    This will install the `unicodeit_gtk` Python module, as well as `unicodeit-gtk` and `unicodeit-gtk-server` executables.
-
-* Alternatively, use `uv run unicodeit-gtk` and/or `uv run unicodeit-gtk-server`.
+The hard prerequisites are a supported version of Python and GTK4.
 
 > [!TIP]
-> If you are packaging this for some other package manager, consider using PEP-517 tools as shown in [this PKGBUILD file](https://aur.archlinux.org/cgit/aur.git/tree/PKGBUILD?h=unicodeit-gtk).
+> An [AUR package](https://aur.archlinux.org/packages/unicodeit-gtk) is available for reference, as well as a [GitHub Action](./.github/workflows/lint.yaml). If you are packaging this for some other package manager, consider using PEP-517 tools as shown in [this PKGBUILD file](https://aur.archlinux.org/cgit/aur.git/tree/PKGBUILD?h=unicodeit-gtk).

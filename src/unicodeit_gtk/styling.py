@@ -1,5 +1,6 @@
 from gi.repository import Gdk, Gtk
 
+
 CSS = """
 label.placeholder {
   opacity: 0.5;

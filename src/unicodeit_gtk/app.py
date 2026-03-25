@@ -5,6 +5,7 @@ import gi
 import unicodeit
 from unicodeit.data import REPLACEMENTS
 
+
 gi.require_version('Gtk', '4.0')
 gi.require_version('Adw', '1')
 

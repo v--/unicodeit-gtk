@@ -35,6 +35,11 @@ dev = [
 requires = ["uv_build (>=0.10, <1)"]
 build-backend = "uv_build"
 
+# uv
+[tool.uv]
+resolution = "lowest-direct"
+
+# ruff
 [tool.ruff]
 line-length = 120
 

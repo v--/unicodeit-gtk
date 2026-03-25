@@ -1,3 +1,11 @@
+## v1.3.4 (2026-03-25)
+
+* Fix new lint and typing errors
+
+## v1.3.3 (2026-03-25)
+
+* Relax dependency versions
+
 ## v1.3.2 (2026-03-11)
 
 * Force minimal window height

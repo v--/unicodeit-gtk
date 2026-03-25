@@ -1,18 +1,18 @@
 [project]
 name = "unicodeit-gtk"
-version = "1.3.2"
+version = "1.3.3"
 description = "A GTK IME popup for entering symbols via (La)TeX"
 license = "Unlicense"
 readme = "README.md"
-requires-python = ">=3.10,<4.0"
+requires-python = ">=3.10, <4.0"
 authors = [
   { name = "Ianis Vasilev", email = "ianis@ivasilev.net" }
 ]
 
 dependencies = [
-  "pygobject (>=3.54.5)",
+  "pygobject (>=3.54)",
   "unicodeit (>=0.7.5)",
-  "setproctitle (>=1.3.7)",
+  "setproctitle (>=1.3)",
 ]
 
 [project.urls]
@@ -25,13 +25,14 @@ unicodeit-gtk-server = "unicodeit_gtk:server_entry_point"
 
 [dependency-groups]
 dev = [
-  "pygobject-stubs (>=2.16.0)",
-  "mypy (>=1.19.1)",
-  "ruff (>=0.15.2)",
+  "pygobject-stubs (>=2.16)",
+  "mypy (>=1.19)",
+  "ruff (>=0.15)",
 ]
 
 [build-system]
-requires = ["uv_build (>=0.10.5, <0.11.0)"]
+# uv build complains if no upper bound is set, but it updates its minor versions often, so we put a major version just to shut it up
+requires = ["uv_build (>=0.10, <1)"]
 build-backend = "uv_build"
 
 [tool.ruff]

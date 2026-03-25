@@ -1,20 +1,20 @@
 import signal
 import warnings
 
+import gi
 import unicodeit
 from unicodeit.data import REPLACEMENTS
 
-import gi
 gi.require_version('Gtk', '4.0')
 gi.require_version('Adw', '1')
 
-from gi.repository import GObject, GLib, Adw, Gtk, Gio, Pango  # noqa: E402
+from gi.repository import Adw, Gio, GLib, GObject, Gtk, Pango  # noqa: E402
 
 
 class UnicodeItCompletion(Gtk.EntryCompletion):
     store: Gtk.ListStore
 
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__()
         self.store = Gtk.ListStore(str)
 
@@ -30,7 +30,7 @@ class UnicodeItCompletion(Gtk.EntryCompletion):
 class UnicodeItInput(Gtk.Entry):
     completion: UnicodeItCompletion
 
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__()
         self.add_css_class('content-input')
         self.completion = UnicodeItCompletion()
@@ -39,15 +39,15 @@ class UnicodeItInput(Gtk.Entry):
             warnings.simplefilter(action='ignore', category=DeprecationWarning)
             self.set_completion(self.completion)
 
-    def reset_text(self):
+    def reset_text(self) -> None:
         return self.get_buffer().set_text('', 0)
 
-    def get_text(self):
+    def get_text(self) -> str:
         return self.get_buffer().get_text()
 
 
 class UnicodeItOutput(Gtk.Label):
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__(
             halign=Gtk.Align.START,
             ellipsize=Pango.EllipsizeMode.START,
@@ -57,7 +57,7 @@ class UnicodeItOutput(Gtk.Label):
 
         self.set_text('')
 
-    def set_text(self, text: str):
+    def set_text(self, text: str) -> None:
         if text:
             super().set_text(text)
             self.remove_css_class('placeholder')
@@ -72,7 +72,7 @@ class UnicodeItWindow(Adw.ApplicationWindow):
     input_widget: UnicodeItInput
     output_widget: UnicodeItOutput
 
-    def __init__(self, application: Gtk.Application):
+    def __init__(self, application: Gtk.Application) -> None:
         super().__init__(
             application=application,
             title='Unicode it',
@@ -99,23 +99,24 @@ class UnicodeItWindow(Adw.ApplicationWindow):
 
         self.activate()
 
-    def get_rendered_text(self):
+    def get_rendered_text(self) -> str:
         return unicodeit.replace(self.input_widget.get_text())
 
-    def on_input(self, widget: UnicodeItInput):
+    def on_input(self, widget: UnicodeItInput) -> None:
         self.output_widget.set_text(self.get_rendered_text())
 
-    def on_enter(self, widget: Gtk.Widget):
+    def on_enter(self, widget: Gtk.Widget) -> None:
         text = self.get_rendered_text()
         self.minimize()
         self.emit('submit', text)
 
-    def minimize(self):
+    def minimize(self) -> None:
         self.set_visible(False)
         self.input_widget.reset_text()
 
-    def activate(self):
+    def activate(self) -> bool:
         self.present()
+        return True
 
 
 GObject.signal_new(
@@ -131,7 +132,7 @@ class UnicodeItApp(Adw.Application):
     window: UnicodeItWindow | None
     one_shot: bool
 
-    def __init__(self, one_shot: bool = False):
+    def __init__(self, one_shot: bool = False) -> None:
         super().__init__(application_id='net.ivasilev.UnicodeItGTK')
         self.one_shot = one_shot
         self.window = None
@@ -146,13 +147,7 @@ class UnicodeItApp(Adw.Application):
         self.set_accels_for_action('app.minimize', ['Escape'])
         self.connect('activate', self.on_activate)
 
-    def run(self, args: list[str] | None):
-        exit_status = super().run(args)
-
-        if exit_status > 0:
-            raise SystemExit(exit_status)
-
-    def on_activate(self, app: 'UnicodeItApp'):
+    def on_activate(self, app: 'UnicodeItApp') -> None:
         self.window = UnicodeItWindow(application=self)
         self.window.connect('submit', self.on_submit)
 
@@ -160,20 +155,20 @@ class UnicodeItApp(Adw.Application):
         minimize_action.connect('activate', self.on_minimize)
         self.add_action(minimize_action)
 
-    def on_submit(self, window: UnicodeItWindow, value: str):
+    def on_submit(self, window: UnicodeItWindow, value: str) -> None:
         self.emit('submit', value)
 
         if self.one_shot and self.window:
             self.window.close()
 
-    def on_minimize(self, action: Gio.Action, parameter: None):
+    def on_minimize(self, action: Gio.Action, parameter: None) -> None:
         if self.one_shot:
             if self.window:
                 self.window.close()
         elif self.window:
             self.window.minimize()
 
-    def activate_window(self):
+    def activate_window(self) -> bool:
         if self.window:
             self.window.activate()
 

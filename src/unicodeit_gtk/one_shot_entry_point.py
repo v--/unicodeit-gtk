@@ -7,12 +7,12 @@ from .app import UnicodeItApp
 from .styling import apply_styling
 
 
-def on_submit(app: UnicodeItApp, value: str):
+def on_submit(app: UnicodeItApp, value: str) -> None:
     if value:
         subprocess.Popen(['wtype', value])
 
 
-def one_shot_entry_point():
+def one_shot_entry_point() -> None:
     setproctitle('unicodeit-gtk')
     apply_styling()
 

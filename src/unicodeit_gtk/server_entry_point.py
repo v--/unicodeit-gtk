@@ -7,17 +7,17 @@ from .app import UnicodeItApp
 from .styling import apply_styling
 
 
-def on_activate(app: UnicodeItApp):
+def on_activate(app: UnicodeItApp) -> None:
     if app.window:
         app.window.minimize()
 
 
-def on_submit(app: UnicodeItApp, value: str):
+def on_submit(app: UnicodeItApp, value: str) -> None:
     if value:
         subprocess.Popen(['wtype', value])
 
 
-def server_entry_point():
+def server_entry_point() -> None:
     setproctitle('unicodeit-gtk')
     apply_styling()
 

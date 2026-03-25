@@ -1,6 +1,5 @@
 from gi.repository import Gdk, Gtk
 
-
 CSS = """
 label.placeholder {
   opacity: 0.5;
@@ -17,7 +16,7 @@ entry.content-input {
 """
 
 
-def apply_styling():
+def apply_styling() -> None:
     style_provider = Gtk.CssProvider()
     style_provider.load_from_string(CSS)  # type: ignore[attr-defined]
 

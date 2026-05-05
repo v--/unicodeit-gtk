@@ -19,7 +19,7 @@ class UnicodeItCompletion(Gtk.EntryCompletion):
         super().__init__()
         self.store = Gtk.ListStore(str)
 
-        for (key, value) in REPLACEMENTS:
+        for key in REPLACEMENTS:
             self.store.append([key])
 
         with warnings.catch_warnings():
@@ -53,7 +53,7 @@ class UnicodeItOutput(Gtk.Label):
             halign=Gtk.Align.START,
             ellipsize=Pango.EllipsizeMode.START,
             margin_start=9,
-            single_line_mode=True
+            single_line_mode=True,
         )
 
         self.set_text('')
@@ -77,7 +77,7 @@ class UnicodeItWindow(Adw.ApplicationWindow):
         super().__init__(
             application=application,
             title='Unicode it',
-            height_request=-1  # Force minimal height
+            height_request=-1,  # Force minimal height
         )
 
         self.toolbar = Adw.ToolbarView()  # type: ignore
@@ -125,7 +125,7 @@ GObject.signal_new(
     UnicodeItWindow,
     0,
     GObject.TYPE_NONE,
-    [GObject.TYPE_STRING]
+    [GObject.TYPE_STRING],
 )
 
 
@@ -142,7 +142,7 @@ class UnicodeItApp(Adw.Application):
         GLib.unix_signal_add(
             GLib.PRIORITY_DEFAULT,
             signal.SIGUSR1,
-            self.activate_window
+            self.activate_window,
         )
 
         self.set_accels_for_action('app.minimize', ['Escape'])
@@ -181,5 +181,5 @@ GObject.signal_new(
     UnicodeItApp,
     0,
     GObject.TYPE_NONE,
-    [GObject.TYPE_STRING]
+    [GObject.TYPE_STRING],
 )

@@ -43,6 +43,13 @@ resolution = "lowest-direct"
 [tool.ruff]
 extend = "./ruff-config/ruff.toml"
 
+[tool.ruff.lint]
+extend-ignore = [
+  "ARG001", # unused-function-argument (GTK callbacks)
+  "ARG002", # unused-method-argument (Overriden GTK methods are not recognized as overriden)
+  "D1",     # undocumented-*
+]
+
 # mypy
 [tool.mypy]
 packages = ["unicodeit_gtk"]

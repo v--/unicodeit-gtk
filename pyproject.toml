@@ -1,6 +1,6 @@
 [project]
 name = "unicodeit-gtk"
-version = "1.3.5"
+version = "1.3.6"
 description = "A GTK IME popup for entering symbols via (La)TeX"
 license = "Unlicense"
 readme = "README.md"

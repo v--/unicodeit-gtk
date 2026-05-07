@@ -1,20 +1,19 @@
-import subprocess
 import sys
 
 from setproctitle import setproctitle
 
-from .app import UnicodeItApp
-from .styling import apply_styling
+from unicodeit_gtk.virtual_input import type_virtually
+
+from .gui import UnicodeItApp
 
 
 def on_submit(app: UnicodeItApp, value: str) -> None:
     if value:
-        subprocess.Popen(['wtype', value])
+        type_virtually(value)
 
 
 def one_shot_entry_point() -> None:
     setproctitle('unicodeit-gtk')
-    apply_styling()
 
     app = UnicodeItApp(one_shot=True)
     app.connect('submit', on_submit)

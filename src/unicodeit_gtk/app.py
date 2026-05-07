@@ -19,7 +19,7 @@ class UnicodeItCompletion(Gtk.EntryCompletion):
         super().__init__()
         self.store = Gtk.ListStore(str)
 
-        for key in REPLACEMENTS:
+        for key, _ in REPLACEMENTS:
             self.store.append([key])
 
         with warnings.catch_warnings():

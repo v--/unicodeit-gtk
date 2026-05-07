@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## Unreleased
 
 * Fix inability of PyGObject to initialize.
+* Fix autocompletion breaking the entire GUI.
 
 ## 1.3.6 - 2026-05-06
 

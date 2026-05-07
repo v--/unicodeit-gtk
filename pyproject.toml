@@ -10,7 +10,7 @@ authors = [
 ]
 
 dependencies = [
-  "pygobject (>=3.54)",
+  "pygobject (>=3.56)",
   "unicodeit (>=0.7.5)",
   "setproctitle (>=1.3)",
 ]
@@ -26,7 +26,7 @@ unicodeit-gtk-server = "unicodeit_gtk:server_entry_point"
 [dependency-groups]
 dev = [
   "mypy (>=1.19)",
-  "pygobject-stubs (>=2.16)",
+  "pygobject-stubs (>=2.17)",
   "ruff (>=0.15)",
   "ruff-config-ivasilev @ git+https://github.com/v--/ruff-config-ivasilev.git@v0.15post7",
 ]

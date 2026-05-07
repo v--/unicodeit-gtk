@@ -40,4 +40,4 @@ Other tools like [`pipx`](https://pipx.pypa.io/) can also be used - simply run t
 The hard prerequisites are a supported version of Python and GTK4.
 
 > [!TIP]
-> An [AUR package](https://aur.archlinux.org/packages/unicodeit-gtk) is available for reference, as well as a [GitHub Action](./.github/workflows/lint.yaml). If you are packaging this for some other package manager, consider using PEP-517 tools as shown in [this PKGBUILD file](https://aur.archlinux.org/cgit/aur.git/tree/PKGBUILD?h=unicodeit-gtk).
+> An [AUR package](https://aur.archlinux.org/packages/unicodeit-gtk) is available for reference, as well as a [GitHub Action](.github/workflows/lint.yml). If you are packaging this for some other package manager, consider using PEP-517 tools as shown in [this PKGBUILD file](https://aur.archlinux.org/cgit/aur.git/tree/PKGBUILD?h=unicodeit-gtk).

@@ -4,15 +4,15 @@
 
 This is a GTK IME popup for entering symbols via (La)TeX - a simple wrapper around the [unicodeit Python library](https://github.com/svenkreiss/unicodeit).
 
-![Basic screenshot](./screenshot_basic.png)
+![Basic screenshot](./screenshots/basic.png)
 
 There is basic completion implemented:
 
-![Basic autocomplete](./screenshot_autocomplete.png)
+![Basic autocomplete](./screenshots/autocomplete.png)
 
 A benefit of using GTK is that emoji can be entered via "Ctrl+.":
 
-![Emoji screenshot](./screenshot_emoji.png)
+![Emoji screenshot](./screenshots/emoji.png)
 
 ## Usage
 
